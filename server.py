@@ -5,21 +5,20 @@ import joblib
 app = Flask(__name__)
 
 # TODO: Load the trained model from the shared volume (use the correct path)
-model = ...
+model = joblib.load('models/iris_model.pkl')
 
 # TODO: Add request method 
-@app.route('/predict', methods=[''])
+@app.route('/predict', methods=['GET','POST'])
 def predict():
     # TODO: Get the input array from the request body
     get_json = request.get_json()
-    iris_input = get_json['input']
-
     # TODO: Make prediction using the model 
     # HINT: use np.array().reshape(1, -1) to convert input to 2D array
-    prediction = ...
+    iris_input = np.array(get_json["input"]).reshape(1, -1)
+    prediction = model.predict(iris_input)
 
     # TODO: Return the prediction as a response
-    return ...
+    return jsonify({"prediction": prediction.tolist()})
 
 @app.route('/')
 def hello():
